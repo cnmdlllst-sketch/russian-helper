@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#173b35"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.json"><title>俄语随身学 2.0</title>
+<style>
+:root{--g:#173b35;--g2:#2b6256;--bg:#f5f5ef;--paper:#fff;--ink:#172522;--muted:#66736f;--line:#e1e7e2;--gold:#e4bd67}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",sans-serif}
+header{background:var(--g);color:white;padding:22px 18px 18px;border-radius:0 0 23px 23px}.top{display:flex;align-items:center;justify-content:space-between;gap:8px}.brand{font-size:23px;font-weight:850}.ver{border:1px solid #628179;border-radius:18px;padding:5px 9px;font-size:12px;color:#dce8e4}header p{font-size:13px;color:#dce8e4;line-height:1.5;margin:8px 0 0}
+main{max-width:760px;margin:auto;padding:14px 13px 90px}nav{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:13px}nav button{padding:11px 2px;border:1px solid var(--line);border-radius:12px;background:white;color:var(--muted);font-size:13px;font-weight:750}nav button.active{background:var(--g);color:white;border-color:var(--g)}
+.panel{display:none}.panel.active{display:block}.card{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:12px;box-shadow:0 3px 12px #193b3509}
+h2{font-size:18px;margin:0 0 11px}h3{font-size:15px;margin:0 0 6px}.muted{font-size:13px;line-height:1.55;color:var(--muted)}.small{font-size:12px}
+button{font:inherit;cursor:pointer}.btn{border:0;background:var(--g);color:white;padding:12px 13px;border-radius:12px;font-size:14px;font-weight:750}.btn.secondary{background:#eaf0ec;color:var(--g)}.btn.outline{background:#fff;color:var(--g);border:1px solid var(--line)}.btn.mini{padding:8px 10px;font-size:12px}
+.row{display:flex;gap:8px;align-items:center}.row>*{min-width:0;flex:1}textarea,input,select{font:inherit;width:100%;padding:12px;border:1px solid #d5ded8;border-radius:12px;background:white;color:var(--ink);font-size:16px}textarea{min-height:96px;resize:vertical}label{font-size:13px;font-weight:700;display:block;margin-bottom:7px}
+.hero{background:linear-gradient(150deg,#fff,#f0f6f1);text-align:center}.bigru{font-size:29px;font-weight:850;margin:12px 0 6px;line-height:1.35}.bigzh{font-size:19px;margin:8px 0}.pron{font-size:13px;color:var(--muted)}.pill{display:inline-block;padding:5px 9px;border-radius:20px;background:#edf3ee;color:#31574e;font-size:12px;margin:2px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.stat{padding:11px;background:#f2f6f2;border-radius:12px}.stat strong{display:block;font-size:21px;color:var(--g)}.stat span{font-size:12px;color:var(--muted)}
+.lineitem{padding:12px 0;border-bottom:1px solid var(--line)}.lineitem:last-child{border-bottom:0}.lineitem strong{font-size:15px}.lineitem .zh{margin:4px 0;color:var(--muted);font-size:13px}
+.result{background:#f2f6f2;border-radius:13px;padding:14px;margin-top:11px;line-height:1.6;overflow-wrap:anywhere;white-space:pre-wrap}.result .translation{font-size:21px;font-weight:750;margin:7px 0}.notice{background:#fff7df;border:1px solid #efdfaa;color:#6c5729;border-radius:12px;padding:11px;font-size:12px;line-height:1.55}
+.chips{display:flex;flex-wrap:wrap;gap:6px}.chips button{background:#f0f4f0;color:var(--g);border:1px solid #dfe7e1;border-radius:22px;padding:8px 10px;font-size:12px}
+.hidden{display:none!important}.footer{text-align:center;color:#89938e;font-size:11px;padding-top:8px}
+@media(min-width:600px){main{padding-top:20px}.card{padding:20px}}
+</style></head><body>
+<header><div class="top"><div class="brand">俄语随身学</div><div class="ver">V2.0 · 实用口语版</div></div><p>不背冷门词，只学生活中真的用得到的表达。<br>对话翻译 · 自然口语 · 日常学习 · 医学俄语</p></header>
+<main>
+<nav><button data-tab="talk" class="active">对话翻译</button><button data-tab="learn">实用口语</button><button data-tab="translate">文字翻译</button><button data-tab="saved">我的收藏</button></nav>
+<section id="talk" class="panel active">
+ <div class="card"><h2>🗣️ 当面沟通模式</h2><p class="muted">听不懂时打开这里。把对方的话输入或用麦克风识别；想说中文时输入中文。点击翻译后，可以把俄语大声播放给对方听。</p>
+ <div class="row"><button class="btn secondary" onclick="setTalk('zh')">我想说中文</button><button class="btn secondary" onclick="setTalk('ru')">对方说俄语</button></div>
+ <div style="margin-top:12px"><label id="talkLabel">你想表达什么？（中文或俄语）</label><textarea id="talkInput" placeholder="例如：不好意思，我没听懂。可以再说慢一点吗？"></textarea></div>
+ <div class="row" style="margin-top:8px"><button class="btn" onclick="talkTranslate()">翻译成对方能听懂的话</button><button class="btn outline" onclick="voiceInput()">🎙️ 语音输入</button></div>
+ <div id="talkOutput" class="result hidden"></div>
+ <div class="row" style="margin-top:8px"><button class="btn secondary" onclick="speakTalk()">🔊 播放俄语</button><button class="btn outline" onclick="saveTalk()">☆ 收藏这句话</button><button class="btn outline" onclick="clearTalk()">清空</button></div>
+ <p class="muted small" id="voiceStatus">语音识别取决于 iPhone 浏览器和系统语言支持；不可用时可直接打字。</p></div>
+ <div class="card"><h2>遇到听不懂时，直接点</h2><div id="emergencyPhrases" class="chips"></div></div>
+ <div class="card"><h2>生活场景快速表达</h2><div id="sceneButtons" class="chips"></div></div>
+ <div class="notice">为了避免生硬直译，常见生活表达优先使用人工整理的口语句子；没收录的内容才尝试在线翻译。机器翻译无法保证每句话都自然，重要内容请确认意思。</div>
+</section>
+<section id="learn" class="panel">
+ <div class="card"><h2>只学实用口语</h2><p class="muted">先记整句话，再理解里面的关键词。每句都来自常见生活、校园或看病场景。</p>
+ <div class="row"><select id="learnCat"><option value="全部">全部场景</option><option>日常交流</option><option>购物吃饭</option><option>交通问路</option><option>校园生活</option><option>口腔医学</option></select><button class="btn secondary" onclick="newLearnDeck()">换一组</button></div></div>
+ <div class="card hero"><div id="learnCategory" class="pill">日常交流</div><div id="learnRu" class="bigru">Я не понимаю.</div><div id="learnZh" class="bigzh">我听不懂。</div><div id="learnTip" class="pron">ya nye pa-nee-MA-yu</div><p id="learnExample" class="muted">遇到听不懂的俄语时直接使用。</p>
+ <div class="row" style="margin-top:12px"><button class="btn secondary" onclick="speakLearn()">🔊 听发音</button><button class="btn outline" onclick="saveLearn()">☆ 收藏</button><button class="btn" onclick="nextLearn()">下一句 →</button></div></div>
+ <div class="card"><h2>这句话怎么用？</h2><div id="learnBreakdown"></div></div>
+ <div class="card"><h2>按场景找句子</h2><div id="phraseList"></div></div>
+</section>
+<section id="translate" class="panel">
+ <div class="card"><h2>文字翻译</h2><p class="muted">中文翻俄语时尽量采用生活化表达。常见句子会优先匹配口语库；其他文本需要联网翻译。</p>
+ <textarea id="textInput" placeholder="输入中文或俄语，例如：我想打包带走。"></textarea>
+ <div class="row" style="margin-top:8px"><button class="btn" onclick="translateText()">翻译</button><button class="btn secondary" onclick="clearText()">清空</button></div><div id="textOutput" class="result hidden"></div>
+ <div class="row" style="margin-top:8px"><button class="btn secondary" onclick="speakTextOutput()">🔊 朗读俄语</button><button class="btn outline" onclick="saveText()">☆ 收藏</button></div></div>
+ <div class="card"><h2>试试这些常用句</h2><div id="quickText" class="chips"></div></div>
+</section>
+<section id="saved" class="panel"><div class="card"><h2>我的收藏</h2><p class="muted">收藏的句子保存在当前手机浏览器中。可随时听发音或删除。</p><div id="savedList"></div><div class="row"><button class="btn secondary" onclick="exportSaved()">导出 TXT</button><button class="btn outline" onclick="clearSaved()">清空收藏</button></div></div></section>
+<div class="footer">俄语随身学 V2.0 · 在线翻译需网络 · 医学内容仅供学习</div></main>
+<script>
+const phrases=[
+{ru:"Я не понимаю.",zh:"我听不懂。",cat:"日常交流",tip:"ya nye pa-nee-MA-yu",use:"听不懂对方说话时。",key:"понимаю = 明白/理解"},
+{ru:"Повторите, пожалуйста.",zh:"麻烦你再说一遍。",cat:"日常交流",tip:"pafta-REE-tye, pa-ZHA-lusta",use:"礼貌地请对方重复。",key:"повторите = 请重复；пожалуйста = 请/麻烦"},
+{ru:"Можно помедленнее?",zh:"可以说慢一点吗？",cat:"日常交流",tip:"MOZH-na pa-MYED-len-nee-ye",use:"对方说太快时。",key:"можно = 可以吗；помедленнее = 慢一点"},
+{ru:"Я пока плохо говорю по-русски.",zh:"我现在俄语还说得不太好。",cat:"日常交流",tip:"ya pa-KA PLO-kha ga-va-RYU pa-RUS-kee",use:"先告诉对方你的俄语水平。",key:"пока = 目前/暂时；плохо = 不太好"},
+{ru:"Вы можете написать?",zh:"你可以写下来吗？",cat:"日常交流",tip:"vy MO-zhe-tye na-pee-SAT",use:"听不懂时请对方写出来。",key:"написать = 写下来"},
+{ru:"Как это сказать по-русски?",zh:"这个用俄语怎么说？",cat:"日常交流",tip:"kak EH-ta ska-ZAT pa-RUS-kee",use:"学习新表达时。",key:"как сказать = 怎么说"},
+{ru:"Что это значит?",zh:"这是什么意思？",cat:"日常交流",tip:"shto EH-ta ZNA-chit",use:"不懂某个词或句子时。",key:"значит = 意思是"},
+{ru:"Секунду, пожалуйста.",zh:"请等一下。",cat:"日常交流",tip:"sye-KUN-du pa-ZHA-lusta",use:"需要一点时间时。",key:"секунду = 一秒/等一下"},
+{ru:"Ничего страшного.",zh:"没关系，没什么大不了的。",cat:"日常交流",tip:"nee-che-VO STRASH-na-va",use:"安慰别人或回应道歉。",key:"常见自然表达，不必逐字翻译"},
+{ru:"Хорошо, договорились.",zh:"好，就这么说定了。",cat:"日常交流",tip:"kha-ra-SHO da-ga-va-REE-lees",use:"确认约定或安排。",key:"договорились = 说定了"},
+{ru:"Сколько стоит?",zh:"这个多少钱？",cat:"购物吃饭",tip:"SKOL-ka STO-eet",use:"商店、市场问价。",key:"сколько = 多少；стоит = 价格是"},
+{ru:"Можно оплатить картой?",zh:"可以刷卡吗？",cat:"购物吃饭",tip:"MOZH-na a-pla-TEET KAR-tay",use:"付款前询问。",key:"картой = 用银行卡"},
+{ru:"Можно с собой?",zh:"可以打包带走吗？",cat:"购物吃饭",tip:"MOZH-na s sa-BOY",use:"餐馆点餐。",key:"с собой = 带走"},
+{ru:"Без сахара, пожалуйста.",zh:"麻烦不要加糖。",cat:"购物吃饭",tip:"byez SA-kha-ra pa-ZHA-lusta",use:"点饮料时。",key:"без = 不要/不加；сахар = 糖"},
+{ru:"Можно меню, пожалуйста?",zh:"麻烦给我菜单。",cat:"购物吃饭",tip:"MOZH-na mye-NYU pa-ZHA-lusta",use:"坐下点餐。",key:"меню = 菜单"},
+{ru:"Я только смотрю, спасибо.",zh:"我先看看，谢谢。",cat:"购物吃饭",tip:"ya TOL-ka SMAT-ryu spa-SEE-ba",use:"店员询问时礼貌回应。",key:"только смотрю = 只是看看"},
+{ru:"Можно пакет?",zh:"可以给我一个袋子吗？",cat:"购物吃饭",tip:"MOZH-na pa-KYET",use:"超市结账时。",key:"пакет = 袋子"},
+{ru:"Где ближайшая остановка?",zh:"最近的公交站在哪里？",cat:"交通问路",tip:"gdye blee-ZHAI-sha-ya a-sta-NOF-ka",use:"找公交站。",key:"ближайшая = 最近的；остановка = 车站"},
+{ru:"Мне нужно сюда.",zh:"我需要到这里。",cat:"交通问路",tip:"mnye NUZH-na syu-DA",use:"给司机看目的地时可配合地图使用。",key:"мне нужно = 我需要"},
+{ru:"Остановите здесь, пожалуйста.",zh:"麻烦在这里停。",cat:"交通问路",tip:"a-sta-na-VEE-tye zdyes pa-ZHA-lusta",use:"打车时。",key:"здесь = 这里"},
+{ru:"Сколько ехать?",zh:"到那里要坐多久？",cat:"交通问路",tip:"SKOL-ka YE-khat",use:"问车程时间。",key:"ехать = 乘车/行驶"},
+{ru:"Я заблудился / заблудилась.",zh:"我迷路了。",cat:"交通问路",tip:"ya za-bloo-DEEL-sya / za-bloo-DEE-las",use:"男性用заблудился，女性用заблудилась。",key:"заблудился/лась = 迷路了"},
+{ru:"Где находится университет?",zh:"大学在哪里？",cat:"交通问路",tip:"gdye na-KHO-deet-sya oo-nee-ver-see-TYET",use:"问学校位置。",key:"где находится = 在哪里"},
+{ru:"Когда начинается занятие?",zh:"什么时候开始上课？",cat:"校园生活",tip:"kag-DA na-chee-NA-yet-sya za-NYA-tee-ye",use:"问上课时间。",key:"занятие = 课程/上课"},
+{ru:"Что задали на дом?",zh:"老师留了什么作业？",cat:"校园生活",tip:"shto za-DA-lee na DOM",use:"问同学作业。",key:"задали на дом = 留作业"},
+{ru:"Можете объяснить ещё раз?",zh:"你可以再解释一遍吗？",cat:"校园生活",tip:"MO-zhe-tye ab-yas-NEET ye-SHCHO ras",use:"上课没听懂时。",key:"объяснить = 解释"},
+{ru:"Я опоздаю на пять минут.",zh:"我会晚五分钟。",cat:"校园生活",tip:"ya a-paz-DA-yu na pyat mee-NOOT",use:"通知老师或同学。",key:"опоздаю = 我会迟到"},
+{ru:"Можно сфотографировать?",zh:"可以拍照吗？",cat:"校园生活",tip:"MOZH-na sfa-ta-gra-FEE-ra-vat",use:"拍板书前先询问。",key:"сфотографировать = 拍照"},
+{ru:"У меня болит зуб.",zh:"我牙疼。",cat:"口腔医学",tip:"oo mye-NYA ba-LEET zoop",use:"向医生说明牙痛。",key:"болит = 疼；зуб = 牙齿"},
+{ru:"У меня болит здесь.",zh:"我这里疼。",cat:"口腔医学",tip:"oo mye-NYA ba-LEET zdyes",use:"同时指向疼痛位置。",key:"здесь = 这里"},
+{ru:"Больно, когда я кусаю?",zh:"我咬东西时会疼。",cat:"口腔医学",tip:"BOL-na kag-DA ya koo-SA-yu",use:"向牙医描述咬合时的疼痛。",key:"больно = 疼；кусать = 咬"},
+{ru:"Откройте рот, пожалуйста.",zh:"请张开嘴。",cat:"口腔医学",tip:"at-KROY-tye rot pa-ZHA-lusta",use:"牙科检查常用。",key:"откройте = 请打开；рот = 嘴"},
+{ru:"Закройте рот, пожалуйста.",zh:"请闭上嘴。",cat:"口腔医学",tip:"za-KROY-tye rot pa-ZHA-lusta",use:"牙科检查常用。",key:"закройте = 请关上"},
+{ru:"Где именно болит?",zh:"具体是哪里疼？",cat:"口腔医学",tip:"gdye ee-MYEN-na ba-LEET",use:"询问患者疼痛位置。",key:"именно = 具体/确切地"},
+{ru:"Как давно болит?",zh:"疼多久了？",cat:"口腔医学",tip:"kak dav-NO ba-LEET",use:"询问症状持续时间。",key:"как давно = 多久了"},
+{ru:"У вас есть аллергия?",zh:"您有过敏吗？",cat:"口腔医学",tip:"oo vas yest al-LYER-gee-ya",use:"医疗交流示例；实际问诊需按课程规范。",key:"аллергия = 过敏"},
+{ru:"Мне нужна запись к стоматологу.",zh:"我想预约牙医。",cat:"口腔医学",tip:"mnye noozh-NA za-pees k sta-ma-TA-la-gu",use:"预约口腔门诊。",key:"запись = 预约；стоматолог = 牙医"}
+];
+const emergency=[0,1,2,3,4,5,6,7,8];
+const scenes=[["🛒 购物吃饭","购物吃饭"],["🚌 交通问路","交通问路"],["🎓 校园生活","校园生活"],["🦷 口腔医学","口腔医学"],["💬 日常交流","日常交流"]];
+let mode='zh',currentTalkRu='',currentTalkZh='',learnDeck=[...phrases],learnIdx=0,lastTextRu='',lastTextZh='',saved=JSON.parse(localStorage.getItem('rus_v2_saved')||'[]');
+const $=id=>document.getElementById(id);
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function showTab(id){document.querySelectorAll('.panel').forEach(x=>x.classList.toggle('active',x.id===id));document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('active',x.dataset.tab===id));window.scrollTo({top:0,behavior:'smooth'})}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
+function setTalk(m){mode=m;$('talkLabel').textContent=m==='zh'?'你想表达什么？（输入中文）':'对方说了什么？（输入俄语）';$('talkInput').placeholder=m==='zh'?'例如：我没听懂，可以再说慢一点吗？':'例如：Повторите, пожалуйста.'}
+function matchPhrase(text){let t=text.trim().toLowerCase().replace(/[！？。，,.!?]/g,'');return phrases.find(p=>[p.ru,p.zh].some(x=>x.toLowerCase().replace(/[！？。，,.!?]/g,'')===t))}
+async function onlineTranslate(text,from,to){const url='https://api.mymemory.translated.net/get?q='+encodeURIComponent(text)+'&langpair='+encodeURIComponent(from+'|'+to);const r=await fetch(url);if(!r.ok)throw Error('network');const j=await r.json();if(!j.responseData?.translatedText)throw Error('empty');return j.responseData.translatedText}
+async function talkTranslate(){let t=$('talkInput').value.trim();if(!t){$('talkOutput').textContent='先输入你想说的话，或输入对方说的俄语。';$('talkOutput').classList.remove('hidden');return}
+$('talkOutput').classList.remove('hidden');$('talkOutput').textContent='正在处理…';
+const isRu=mode==='ru'||/[А-Яа-яЁё]/.test(t);let p=matchPhrase(t);
+try{
+ if(p){currentTalkRu=p.ru;currentTalkZh=p.zh;renderTalkOutput(p.ru,p.zh,'已匹配实用口语库：优先使用自然、常见的表达。');return}
+ if(isRu){currentTalkZh=await onlineTranslate(t,'ru','zh-CN');currentTalkRu=t;renderTalkOutput(t,currentTalkZh,'在线翻译结果：可能需要结合上下文确认。')}
+ else{currentTalkRu=await onlineTranslate(t,'zh-CN','ru');currentTalkZh=t;renderTalkOutput(currentTalkRu,t,'在线翻译结果：这是通用机器翻译；若是口语或复杂句，建议改成短句。')}
+}catch(e){$('talkOutput').textContent='在线翻译暂时不可用。你可以从下方“遇到听不懂时”或“生活场景”直接选常用句。'}
+}
+function renderTalkOutput(ru,zh,note){$('talkOutput').innerHTML='<div class="small muted">俄语（给对方看/听）</div><div class="translation">'+esc(ru)+'</div><div class="small muted">中文意思</div><div style="font-size:17px;margin:6px 0">'+esc(zh)+'</div><div class="small muted">'+esc(note)+'</div>'; }
+function speak(text,lang){if(!('speechSynthesis'in window)){alert('当前浏览器不支持朗读，请使用 iPhone 系统朗读功能。');return}speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(text);u.lang=lang;speechSynthesis.speak(u)}
+function speakTalk(){if(currentTalkRu)speak(currentTalkRu,'ru-RU');else alert('请先翻译内容。')}
+function voiceInput(){let SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){$('voiceStatus').textContent='当前 Safari 可能不支持网页语音识别。可使用 iPhone 键盘上的听写按钮输入。';return}let rec=new SR();rec.lang=mode==='ru'?'ru-RU':'zh-CN';rec.interimResults=false;rec.onresult=e=>{$('talkInput').value=e.results[0][0].transcript;$('voiceStatus').textContent='已识别语音，请检查文字后点击翻译。'};rec.onerror=()=>{$('voiceStatus').textContent='语音识别失败。请检查麦克风权限，或使用键盘听写。'};rec.start();$('voiceStatus').textContent='正在听，请开始说话…'}
+function clearTalk(){$('talkInput').value='';$('talkOutput').classList.add('hidden');currentTalkRu='';currentTalkZh=''}
+function saveItem(ru,zh,cat='自定义'){if(!ru)return;if(!saved.some(x=>x.ru===ru)){saved.unshift({ru,zh,cat});localStorage.setItem('rus_v2_saved',JSON.stringify(saved));renderSaved();return true}return false}
+function saveTalk(){if(!currentTalkRu){alert('先翻译一句话再收藏。');return}saveItem(currentTalkRu,currentTalkZh,'对话翻译');alert('已收藏。')}
+function quickPhrase(i){let p=phrases[i];$('talkInput').value=p.zh;setTalk('zh');talkTranslate()}
+function renderEmergency(){$('emergencyPhrases').innerHTML=emergency.map(i=>`<button onclick="quickPhrase(${i})">${esc(phrases[i].zh)}</button>`).join('');$('sceneButtons').innerHTML=scenes.map(s=>`<button onclick="filterScene('${s[1]}')">${s[0]}</button>`).join('')}
+function filterScene(cat){$('learnCat').value=cat;newLearnDeck();showTab('learn')}
+function newLearnDeck(){let c=$('learnCat').value;learnDeck=phrases.filter(p=>c==='全部'||p.cat===c);if(!learnDeck.length)learnDeck=[...phrases];learnDeck.sort(()=>Math.random()-.5);learnIdx=0;renderLearn()}
+function renderLearn(){let p=learnDeck[learnIdx%learnDeck.length];$('learnCategory').textContent=p.cat;$('learnRu').textContent=p.ru;$('learnZh').textContent=p.zh;$('learnTip').textContent='读音提示：'+p.tip;$('learnExample').textContent='使用场景：'+p.use;$('learnBreakdown').innerHTML='<div class="lineitem"><strong>实用关键词</strong><div class="zh">'+esc(p.key)+'</div></div><div class="lineitem"><strong>记忆方法</strong><div class="zh">先把整句话读熟，遇到相同场景直接使用，不需要先背复杂语法。</div></div>'}
+function nextLearn(){learnIdx=(learnIdx+1)%learnDeck.length;renderLearn()}
+function speakLearn(){speak(learnDeck[learnIdx%learnDeck.length].ru,'ru-RU')}
+function saveLearn(){let p=learnDeck[learnIdx%learnDeck.length];saveItem(p.ru,p.zh,p.cat);renderSaved();alert('已收藏。')}
+function renderPhraseList(){let c=$('learnCat').value;let list=phrases.filter(p=>c==='全部'||p.cat===c);$('phraseList').innerHTML=list.map(p=>`<div class="lineitem"><span class="pill">${esc(p.cat)}</span><strong>${esc(p.ru)}</strong><div class="zh">${esc(p.zh)}</div><button class="btn mini secondary" onclick="speak('${p.ru.replace(/'/g,"\\'")}','ru-RU')">🔊 听发音</button> <button class="btn mini outline" onclick="saveItem('${p.ru.replace(/'/g,"\\'")}','${p.zh.replace(/'/g,"\\'")}','${p.cat}');renderSaved()">☆ 收藏</button></div>`).join('')}
+$('learnCat').onchange=()=>{newLearnDeck();renderPhraseList()}
+async function translateText(){let t=$('textInput').value.trim();if(!t)return;let isRu=/[А-Яа-яЁё]/.test(t),p=matchPhrase(t);$('textOutput').classList.remove('hidden');$('textOutput').textContent='正在翻译…';try{if(p){lastTextRu=p.ru;lastTextZh=p.zh;renderTextOutput(p.ru,p.zh,'匹配到实用口语库，优先使用自然表达。')}else if(isRu){lastTextZh=await onlineTranslate(t,'ru','zh-CN');lastTextRu=t;renderTextOutput(t,lastTextZh,'在线机器翻译；请结合语境判断。')}else{lastTextRu=await onlineTranslate(t,'zh-CN','ru');lastTextZh=t;renderTextOutput(lastTextRu,t,'在线机器翻译；为了更自然，建议用短句表达。')}}catch(e){$('textOutput').textContent='在线翻译暂时不可用。常用句可以在“实用口语”中搜索或选择。'}}
+function renderTextOutput(ru,zh,note){$('textOutput').innerHTML='<div class="small muted">俄语</div><div class="translation">'+esc(ru)+'</div><div class="small muted">中文意思</div><div style="font-size:17px;margin:6px 0">'+esc(zh)+'</div><div class="small muted">'+esc(note)+'</div>'}
+function clearText(){$('textInput').value='';$('textOutput').classList.add('hidden');lastTextRu='';lastTextZh=''}
+function speakTextOutput(){if(lastTextRu)speak(lastTextRu,'ru-RU');else alert('请先翻译内容。')}
+function saveText(){if(!lastTextRu){alert('请先翻译内容。');return}saveItem(lastTextRu,lastTextZh,'文字翻译');alert('已收藏。')}
+function renderSaved(){if(!saved.length){$('savedList').innerHTML='<p class="muted">还没有收藏。对话或学习时点“收藏”就会保存在这里。</p>';return}$('savedList').innerHTML=saved.map((p,i)=>`<div class="lineitem"><span class="pill">${esc(p.cat)}</span><strong>${esc(p.ru)}</strong><div class="zh">${esc(p.zh)}</div><button class="btn mini secondary" onclick="speak('${p.ru.replace(/'/g,"\\'")}','ru-RU')">🔊 朗读</button> <button class="btn mini outline" onclick="removeSaved(${i})">删除</button></div>`).join('')}
+function removeSaved(i){saved.splice(i,1);localStorage.setItem('rus_v2_saved',JSON.stringify(saved));renderSaved()}
+function clearSaved(){if(confirm('确定清空收藏？')){saved=[];localStorage.setItem('rus_v2_saved','[]');renderSaved()}}
+function exportSaved(){let txt=saved.map(p=>p.ru+' — '+p.zh+' ['+p.cat+']').join('\n');let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([txt||'收藏为空'],{type:'text/plain;charset=utf-8'}));a.download='俄语实用口语收藏.txt';a.click();URL.revokeObjectURL(a.href)}
+function quickTextRender(){$('quickText').innerHTML=phrases.slice(0,12).map(p=>`<button onclick="fillText('${p.zh.replace(/'/g,"\\'")}')">${esc(p.zh)}</button>`).join('')}
+function fillText(t){$('textInput').value=t;showTab('translate')}
+if('serviceWorker'in navigator&&location.protocol.startsWith('http'))addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+setTalk('zh');renderEmergency();newLearnDeck();renderPhraseList();quickTextRender();renderSaved();
+</script></body></html>
